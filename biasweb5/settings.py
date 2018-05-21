@@ -140,7 +140,5 @@ STATIC_ROOT = 'static'
 
 
 AUTH_USER_MODEL = 'webapp.User'
-
 LOGIN_REDIRECT_URL = 'mobileview'
-
 LOGOUT_REDIRECT_URL = 'admin_setup'
