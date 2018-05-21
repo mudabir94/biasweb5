@@ -1,0 +1,31 @@
+{% extends "webapp/base.html" %}
+{%csrf_token%}
+{% block content %}
+{% load static from staticfiles%} 
+
+<div class="container latest-product-section"> 
+     
+        {%  for mob in mobiles  %}
+            {% if forloop.counter0|divisibleby:3 %} 
+            <div class="row text-center"> {%  endif %}
+                    <div class="col-md-4 sm-margin-b-50 pull-left">
+                            <div class="margin-b-20">
+                            <img class="img-responsive" src="{% static mob.imagepath1 %}" alt="Latest Products Image"/>
+                                </div>
+                            <h4><a href="{% url 'mobileinfo' id=mob.id %}">{{mob.Mobile_Companny}}</a> <span class="text-uppercase margin-l-20">{{mob.Mobile_Name}}</span></h4>
+                            <h1><a href = "{% url 'mobileinfo' id=mob.id %}"> {{mob.price}} </a></h1>
+                            <h4>{{mob.OS}}</h4>
+                            <a class="link" href="{% url 'mobileinfo' id=mob.id %}">Read More</a>
+                            
+                    </div>
+        
+        {%  if forloop.counter|divisibleby:3 or forloop.last %}
+            </div><!-- row closing --><hr>
+            {%  endif %}
+        {%  endfor %}
+       
+
+        
+ </div>
+
+{% endblock  %}
