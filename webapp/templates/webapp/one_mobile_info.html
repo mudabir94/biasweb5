@@ -8,7 +8,7 @@
         <div class="row">
         {%for m in singlemob %}
            <div class="col-xs-4 item-photo">
-                <img style="max-width:100%;" src="{% static 'webapp/img/samsung.jpg' %}" />
+                <img style="max-width:100%;" src="{% static m.imagepath1 %}" />
             </div>
             <div class="col-xs-5" style="border:0px solid gray">
                 <h3>{{m.Mobile_Name}}</h3>    
@@ -86,17 +86,14 @@
             </div>                              
     
             <div class="col-xs-9">
-                <ul class="menu-items">
-                    <li class="active">Whats New</li>
-                    <li>Extra Features</li>
+                <ul class="menu-items" id ="ulparaId">
+                    <li class="active"  onclick='desFunc("{{m.Whats_new}}")'>Whats New</li>
+                    <li onclick='desFunc("{{m.Mobile_Companny}}")'>Mobile Company</li>
                     
                 </ul>
                 <div style="width:100%;border-top:1px solid silver">
-                    <p style="padding:15px;">
-                        <small>
-                        Stay connected either on the phone or the Web with the Galaxy S4 I337 from Samsung. With 16 GB of memory and a 4G connection, this phone stores precious photos and video and lets you upload them to a cloud or social network at blinding-fast speed. With a 17-hour operating life from one charge, this phone allows you keep in touch even on the go. 
-                        With its built-in photo editor, the Galaxy S4 allows you to edit photos with the touch of a finger, eliminating extraneous background items. Usable with most carriers, this smartphone is the perfect companion for work or entertainment.
-                        </small>
+                    <p style="padding:15px;" id="paragraphId">
+                      {{m.Whats_new}}
                     </p>
                 </div>
                 
@@ -104,8 +101,29 @@
         {% endfor %}		
         </div>
     </div>        
+<script>  
+  var a=  $("#ulparaId li.active");
   
+    function desFunc(des){
+         a=  $("#ulparaId li.active");
+         b=des;
         
+        a=$("#ulparaId li.active").text();
+           
+        if (a=="Whats New"){
+            document.getElementById("paragraphId").innerHTML=des;
+        }
+        else if (a=="Mobile Company"){
+            document.getElementById("paragraphId").innerHTML=des;
+        }
+    }
+
+      $(document).ready(function () {
+        
+    
+        
+      });
+</script>   
 
 
 {% endblock %}

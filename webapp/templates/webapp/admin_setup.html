@@ -280,17 +280,14 @@ $.ajax({
        }
    });
       location.reload().delay(800);
+ 
  });
-
-
 function myFunction(id) {
    var item = $('#'+id);
-    var temp = item;
+   var temp = item;
    item.find(".show_hide").remove();
    var btn = $('<button>Show</button>').attr('width','200px').addClass('show_hide').attr('onclick', '(myFunc('+id+'))');
-   
-   var data = id.split("_");
-     
+   var data = id.split("_");  
    var arr=[];
    for (var key in data)
             {   

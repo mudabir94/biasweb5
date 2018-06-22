@@ -10,7 +10,67 @@ from django.shortcuts import render, redirect
 from django.db import connection
 from django.db.models import Q
 import json
-role=1
+role=1   #global variable used in adminsetup and globalFunc function. 
+mobiles=samsung_phone.objects.raw('SELECT * FROM webapp_samsung_phone WHERE id=1 or id=2') # making mobiles object global.
+def showScore(request):
+    if request.method=="POST":
+        if request.is_ajax:
+            d = request.POST.get('d')
+            b = json.loads(d)
+             
+            print(b)
+            dic=b[0]
+            for k in dic:
+                print(dic[k]) # values of the a model
+                
+
+        #Get all values of each index of the dictionary then store the info into the table. 
+        # Fetch info for the current user. Get the info and make calculations and generate a score.
+        # Send all the score  through ajax to the page. 
+            
+            print("jk",request.user.id)
+            print("jk",request.user.username)
+            dict = {'mobiles':'mobile info'}
+    return HttpResponse(json.dumps(dict), content_type='application/json')
+
+def showMob(request):
+    if request.method=="POST":
+        if request.is_ajax:
+        # print("ajax",request.POST.get('data'))
+            ####print("PST",request.POST.get('d')) 
+            d = request.POST.get('d')
+        ### print('JSONLOADS',eval(d))
+            b = json.loads(d)
+            print(b[0])
+            query_array=[]
+            count=1    
+            for key,value in  enumerate(b):
+                print("key",key)
+                print ("val", value)
+                query_array.append(' '+ 'id'+ '=' + value )
+            query = 'SELECT * FROM webapp_samsung_phone WHERE '+ ' or ' .join(query_array)
+            global mobiles
+            mobiles=samsung_phone.objects.raw(query)
+           
+            print(mobiles)
+           
+
+            dict = {'mobiles':'asdf'}
+    return HttpResponse(json.dumps(dict), content_type='application/json')
+    #return render_to_response(request,'webapp/showmob.html',{'mobiles':mobiles}) 
+    '''
+    query = 'SELECT * FROM webapp_samsung_phone WHERE id=1 or id=2'
+    mobiles=samsung_phone.objects.raw(query)
+    print(mobiles)
+    return render(request,'webapp/showmob.html',{'mobiles':mobiles})
+    '''
+    
+     
+def cart(request):
+    #query = 'SELECT * FROM webapp_samsung_phone WHERE id=1 or id=2 or id=3'
+    #mobiles=samsung_phone.objects.raw(query)
+    print(mobiles)
+    return render(request, 'webapp/cart.html',{'mobiles':mobiles})
 def ind(request):
    
     if request.is_ajax:
@@ -126,7 +186,7 @@ def globalFunc(request):
         
     
 
-def admin_setup(request):
+def adminSetup(request):
     global  role
     
     feat=sort_feature.objects.filter(~Q(sh_hd = 0),roles=role).order_by('position')
@@ -171,7 +231,7 @@ def admin_setup(request):
    
 
 # Create your views here.
-def signup(request):
+def signUp(request):
      #m = request.session['username']
      #print(m)
      num_visits=request.session.get('num_visits', 0)
@@ -346,87 +406,9 @@ class filter(TemplateView):
                 mobiles=samsung_phone.objects.raw(query)
                 print(mobiles)
             
+          
             
-            '''
-            if(first_choice!="" and first_choice2!="" and second_choice!="" and third_choice!="" and fourth_choice!="" and  fourth_choice2!=""
-                and fifth_choice!="" and six_choice!="" and seven_choice!="" ):
-                mobiles=samsung_phone.objects.filter(price__range=(int(first_choice),int(first_choice2)),OS=third_choice,Colors__icontains=second_choice,
-                Size__range=(float(fourth_choice),float(fourth_choice2)),
-                Cpu__icontains=fifth_choice,back_camera__icontains=six_choice,battery__icontains=seven_choice)
-                print("in if condition")
-
-
-
-            elif (first_choice=="" and first_choice2=="" and second_choice=="" and third_choice=="" and fourth_choice!="" and fourth_choice2!="" 
-                and fifth_choice=="" and six_choice=="" and seven_choice==""):
-                 mobiles=samsung_phone.objects.filter(Size__range=(float(fourth_choice),float(fourth_choice2)))
-            elif (first_choice!="" and first_choice2!="" and second_choice=="" and third_choice=="" and fourth_choice=="" and fourth_choice2==""
-                and fifth_choice=="" and six_choice=="" and seven_choice==""):     
-                 mobiles=samsung_phone.objects.filter(price__range=(int(first_choice),int(first_choice2)))
-            elif (first_choice=="" and first_choice2=="" and second_choice!="" and third_choice=="" and fourth_choice=="" and fourth_choice2==""
-                and fifth_choice=="" and six_choice=="" and seven_choice==""):     
-                 mobiles=samsung_phone.objects.filter(Colors__icontains=second_choice)
-            elif (first_choice=="" and first_choice2=="" and second_choice=="" and third_choice!="" and fourth_choice=="" and fourth_choice2==""
-                and fifth_choice=="" and six_choice=="" and seven_choice==""):     
-                 mobiles=samsung_phone.objects.filter(OS=third_choice) 
-            elif (first_choice=="" and first_choice2=="" and second_choice=="" and third_choice=="" and fourth_choice=="" and fourth_choice2==""
-                and fifth_choice!="" and six_choice=="" and seven_choice==""):     
-                 mobiles=samsung_phone.objects.filter(Cpu__icontains=fifth_choice) 
-            elif (first_choice=="" and first_choice2=="" and second_choice=="" and third_choice=="" and fourth_choice=="" and fourth_choice2==""
-                and fifth_choice=="" and six_choice!="" and seven_choice==""):     
-                 mobiles=samsung_phone.objects.filter(back_camera__icontains=six_choice)
-            elif (first_choice=="" and first_choice2=="" and second_choice=="" and third_choice=="" and fourth_choice=="" and fourth_choice2==""
-                and fifth_choice=="" and six_choice=="" and seven_choice!=""):     
-                 mobiles=samsung_phone.objects.filter(battery__icontains=seven_choice)
-        
-            elif(first_choice!="" and first_choice2!="" and second_choice!="" and third_choice!="" and fourth_choice=="" and fourth_choice2==""
-                and fifth_choice!="" and six_choice!="" and seven_choice!=""):
-                 mobiles=samsung_phone.objects.filter(price__range=(int(first_choice),int(first_choice2)),OS=third_choice,Colors__icontains=second_choice,
-                   Cpu__icontains=fifth_choice,back_camera__icontains=six_choice,battery__icontains=seven_choice)
-
-            elif(first_choice!="" and first_choice2!="" and second_choice!="" and third_choice=="" and fourth_choice!="" and fourth_choice2!=""
-                and fifth_choice!="" and six_choice!="" and seven_choice!=""):  
-                 mobiles=samsung_phone.objects.filter(price__range=(int(first_choice),int(first_choice2)),Colors__icontains=second_choice,
-                 Size__range=(float(fourth_choice),float(fourth_choice2)), Cpu__icontains=fifth_choice,
-                 back_camera__icontains=six_choice,battery__icontains=seven_choice )
-
-            elif(first_choice!="" and first_choice2!="" and second_choice=="" and third_choice!="" and fourth_choice!="" and fourth_choice2!=""
-                 and fifth_choice!="" and six_choice!="" and seven_choice!=""):  
-                 mobiles=samsung_phone.objects.filter(price__range=(int(first_choice),int(first_choice2)),OS=third_choice,Size__range=(float(fourth_choice),
-                 float(fourth_choice2)), Cpu__icontains=fifth_choice,back_camera__icontains=six_choice,battery__icontains=seven_choice)
-
-
-                 
-            elif(first_choice=="" and first_choice2=="" and second_choice!="" and third_choice!="" and fourth_choice!="" and fourth_choice2!=""
-                 and fifth_choice!="" and six_choice!="" and seven_choice!=""):  
-                 mobiles=samsung_phone.objects.filter(Colors__icontains=second_choice,OS=third_choice,Size__range=(float(fourth_choice),float(fourth_choice2)),
-                 Cpu__icontains=fifth_choice,back_camera__icontains=six_choice,battery__icontains=seven_choice)
-                  
-            elif(first_choice!="" and first_choice2!="" and second_choice!="" and third_choice!="" and fourth_choice!="" and fourth_choice2!=""
-                 and fifth_choice=="" and six_choice!="" and seven_choice!=""):  
-                 mobiles=samsung_phone.objects.filter(Colors__icontains=second_choice,OS=third_choice,Size__range=(float(fourth_choice),float(fourth_choice2)),
-                 back_camera__icontains=six_choice,battery__icontains=seven_choice)
-                  
-            elif(first_choice!="" and first_choice2!="" and second_choice!="" and third_choice!="" and fourth_choice!="" and fourth_choice2!=""
-                 and fifth_choice!="" and six_choice=="" and seven_choice!=""):  
-                 mobiles=samsung_phone.objects.filter(Colors__icontains=second_choice,OS=third_choice,Size__range=(float(fourth_choice),float(fourth_choice2)),
-                 Cpu__icontains=fifth_choice,battery__icontains=seven_choice)
-
-                  
-            elif(first_choice!="" and first_choice2!="" and second_choice!="" and third_choice!="" and fourth_choice!="" and fourth_choice2!=""
-                 and fifth_choice!="" and six_choice!="" and seven_choice==""):  
-                 mobiles=samsung_phone.objects.filter(Colors__icontains=second_choice,OS=third_choice,Size__range=(float(fourth_choice),float(fourth_choice2)),
-                 Cpu__icontains=fifth_choice,back_camera__icontains=six_choice)
-
-
-
-
-
-            else:
-                mobiles=samsung_phone.objects.all()
-                print("in else")
-            '''
-        return render(request,'webapp/filterpost.html',{'mobiles':mobiles})
+        return render(request,'webapp/mobile.html',{'mobiles':mobiles})
 
 
 class blogview (TemplateView):
@@ -467,7 +449,7 @@ class mobile_phone_view(TemplateView):
         #form=mobile_phone_form(request.POST)
 
         mobiles= samsung_phone.objects.all()
-        paginator = Paginator(mobiles,6)
+        paginator = Paginator(mobiles,9)
         page = request.GET.get('page')
         mobiles = paginator.get_page(page)
         print(mobiles)
